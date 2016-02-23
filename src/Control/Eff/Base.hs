@@ -29,5 +29,5 @@ runBase (Impure (InL (Lift m)) k) = m >>= runBase . k
 runIO :: Eff (Base IO :+ Void) a -> IO a
 runIO = runBase
 
-runST :: Eff (Base (ST s) :+ Void) a -> ST s a
-runST = runBase
+runST_ :: (forall s. Eff (Base (ST s) :+ Void) a) -> a
+runST_ m = runST (runBase m)
