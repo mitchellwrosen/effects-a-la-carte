@@ -22,5 +22,6 @@ library:
   source-dirs: src
   dependencies:
     - base
+    - concurrent-supply
     - free
     - transformers

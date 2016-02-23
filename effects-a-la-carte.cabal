@@ -26,11 +26,13 @@ library
   default-extensions: DeriveFunctor FlexibleContexts FlexibleInstances GADTs InstanceSigs MultiParamTypeClasses RankNTypes TypeOperators
   build-depends:
       base
+    , concurrent-supply
     , free
     , transformers
   exposed-modules:
       Control.Eff
       Control.Eff.Except
+      Control.Eff.Fresh
       Control.Eff.IO
       Control.Eff.Reader
       Control.Eff.Select

@@ -7,20 +7,20 @@ import Control.Eff.Void
 
 import Control.Monad
 
-data (f :+: g) a = InL (f a) | InR (g a)
-infixr 5 :+:
+data (f :+ g) a = InL (f a) | InR (g a)
+infixr 5 :+
 
 
-class f :<: g where
+class f :< g where
   inj :: f a -> g a
 
-instance f :<: f where
+instance f :< f where
   inj = id
 
-instance {-# OVERLAPPING #-} f :<: (f :+: g) where
+instance {-# OVERLAPPING #-} f :< (f :+ g) where
   inj = InL
 
-instance {-# OVERLAPPING #-} (f :<: g) => f :<: (h :+: g) where
+instance {-# OVERLAPPING #-} (f :< g) => f :< (h :+ g) where
   inj = InR . inj
 
 
@@ -60,5 +60,5 @@ hoist :: (forall x. f x -> g x) -> Eff f a -> Eff g a
 hoist _ (Pure a) = Pure a
 hoist f (Impure g k) = Impure (f g) (\x -> hoist f (k x))
 
-inject :: (f :<: g) => f a -> Eff g a
+inject :: (f :< g) => f a -> Eff g a
 inject = hoist inj . eta
