@@ -33,7 +33,7 @@ library
       Control.Eff
       Control.Eff.Except
       Control.Eff.Fresh
-      Control.Eff.IO
+      Control.Eff.Lift
       Control.Eff.Reader
       Control.Eff.Select
       Control.Eff.State
