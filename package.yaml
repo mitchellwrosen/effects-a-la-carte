@@ -8,7 +8,19 @@ github: mitchellwrosen/effects-a-la-carte
 copyright: 2016 Mitchell Rosen
 category: Control
 
+default-extensions:
+  - DeriveFunctor
+  - FlexibleContexts
+  - FlexibleInstances
+  - GADTs
+  - InstanceSigs
+  - MultiParamTypeClasses
+  - RankNTypes
+  - TypeOperators
+
 library:
   source-dirs: src
   dependencies:
     - base
+    - free
+    - transformers
