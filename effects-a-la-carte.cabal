@@ -31,9 +31,9 @@ library
     , transformers
   exposed-modules:
       Control.Eff
+      Control.Eff.Base
       Control.Eff.Except
       Control.Eff.Fresh
-      Control.Eff.Lift
       Control.Eff.Program
       Control.Eff.Reader
       Control.Eff.Select
