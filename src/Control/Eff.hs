@@ -1,4 +1,9 @@
-module Control.Eff where
+module Control.Eff
+  ( module Control.Eff
+  , module Control.Eff.Void
+  ) where
+
+import Control.Eff.Void
 
 import Control.Monad
 
@@ -45,6 +50,9 @@ instance Monad (Eff eff) where
   Impure g k >>= f = Impure g (k >=> f)
 
 
+run :: Eff Void a -> a
+run (Pure a) = a
+
 eta :: eff a -> Eff eff a
 eta f = Impure f Pure
 
@@ -54,10 +62,3 @@ hoist f (Impure g k) = Impure (f g) (\x -> hoist f (k x))
 
 inject :: (f :<: g) => f a -> Eff g a
 inject = hoist inj . eta
-
-
-data Void a
-  deriving Functor
-
-run :: Eff Void a -> a
-run (Pure a) = a

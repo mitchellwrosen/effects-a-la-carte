@@ -31,6 +31,8 @@ library
   exposed-modules:
       Control.Eff
       Control.Eff.Except
+      Control.Eff.IO
       Control.Eff.Reader
       Control.Eff.State
+      Control.Eff.Void
   default-language: Haskell2010
