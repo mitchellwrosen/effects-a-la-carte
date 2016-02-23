@@ -1,0 +1,14 @@
+name: effects-a-la-carte
+version: 0.1.0.0
+synopsis: Effects a la carte
+license: BSD3
+author: Mitchell Rosen
+maintainer: mitchellwrosen@gmail.com
+github: mitchellwrosen/effects-a-la-carte
+copyright: 2016 Mitchell Rosen
+category: Control
+
+library:
+  source-dirs: src
+  dependencies:
+    - base
