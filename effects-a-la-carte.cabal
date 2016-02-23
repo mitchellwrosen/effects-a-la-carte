@@ -34,6 +34,7 @@ library
       Control.Eff.Except
       Control.Eff.Fresh
       Control.Eff.Lift
+      Control.Eff.Program
       Control.Eff.Reader
       Control.Eff.Select
       Control.Eff.State

@@ -7,6 +7,7 @@ import Control.Eff.Void
 
 import Control.Monad
 
+
 data (f :+ g) a = InL (f a) | InR (g a)
 infixr 5 :+
 
