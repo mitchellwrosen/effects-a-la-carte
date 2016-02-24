@@ -9,6 +9,7 @@ copyright: 2016 Mitchell Rosen
 category: Control
 
 default-extensions:
+  - BangPatterns
   - DeriveFunctor
   - FlexibleContexts
   - FlexibleInstances
@@ -16,6 +17,7 @@ default-extensions:
   - InstanceSigs
   - MultiParamTypeClasses
   - RankNTypes
+  - ScopedTypeVariables
   - TypeOperators
 
 library:
