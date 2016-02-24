@@ -7,11 +7,9 @@ data Select x where
   Select :: [a] -> Select a
 
 
-select :: (Select :< eff) => [a] -> Eff eff a
-select xs = inject (Select xs)
+select :: (Select :< effs) => [a] -> Eff effs a
+select xs = eta (Select xs)
 
 
-runSelect :: Eff (Select :+ eff) a -> Eff eff [a]
-runSelect (Pure a) = pure [a]
-runSelect (Impure (InL (Select xs)) k) = concat <$> mapM (runSelect . k) xs
-runSelect (Impure (InR eff) k) = Impure eff (runSelect . k)
+runSelect :: Eff (Select ': effs) a -> Eff effs [a]
+runSelect = eliminate (\a -> pure [a]) (\(Select xs) k -> concat <$> mapM k xs)

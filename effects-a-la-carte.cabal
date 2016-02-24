@@ -23,11 +23,10 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: BangPatterns DeriveFunctor FlexibleContexts FlexibleInstances GADTs InstanceSigs MultiParamTypeClasses RankNTypes ScopedTypeVariables TypeOperators
+  default-extensions: BangPatterns DataKinds DeriveFunctor FlexibleContexts FlexibleInstances GADTs InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses PolyKinds RankNTypes ScopedTypeVariables TypeOperators
   build-depends:
       base
     , concurrent-supply
-    , free
     , transformers
   exposed-modules:
       Control.Eff
@@ -40,4 +39,5 @@ library
       Control.Eff.State
       Control.Eff.Void
       Control.Eff.Writer
+      Data.Union
   default-language: Haskell2010

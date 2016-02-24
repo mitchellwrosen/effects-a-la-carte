@@ -1,6 +1,5 @@
 module Control.Eff.State
-  ( State
-  , get
+  ( get
   , put
   , modify
   , runState
@@ -9,32 +8,32 @@ module Control.Eff.State
   ) where
 
 import Control.Eff
+import Control.Eff.Reader
+import Control.Eff.Writer
 
 
-data State s x where
-  Modify :: (s -> s) -> State s s
+get :: (Reader r :< effs) => Eff effs r
+get = ask
+
+put :: (Writer s :< effs) => s -> Eff effs ()
+put = tell
+
+modify :: (Reader s :< effs, Writer s :< effs) => (s -> s) -> Eff effs ()
+modify f = get >>= put . f
 
 
-get :: (State s :< eff) => Eff eff s
-get = _modify id
+runState :: Eff (Reader s ': Writer s ': effs) a -> s -> Eff effs (a, s)
+runState (Pure a) s = pure (a, s)
+runState (Impure es k) s =
+  case decomp es of
+    Left es' ->
+      case decomp es' of
+        Left es'' -> Impure es'' (\x -> runState (k x) s)
+        Right (Tell s') -> runState (k ()) s'
+    Right Ask -> runState (k s) s
 
-put :: (State s :< eff) => s -> Eff eff ()
-put s = modify (const s)
-
-modify :: (State s :< eff) => (s -> s) -> Eff eff ()
-modify f = () <$ _modify f
-
-_modify :: (State s :< eff) => (s -> s) -> Eff eff s
-_modify f = inject (Modify f)
-
-
-runState :: Eff (State s :+ eff) a -> s -> Eff eff (a, s)
-runState (Pure a) s = Pure (a, s)
-runState (Impure (InL (Modify f)) k) s = runState (k s) (f s)
-runState (Impure (InR eff) k) s = Impure eff (\x -> runState (k x) s)
-
-evalState :: Eff (State s :+ eff) a -> s -> Eff eff a
+evalState :: Eff (Reader s ': Writer s ': effs) a -> s -> Eff effs a
 evalState f s = fst <$> runState f s
 
-execState :: Eff (State s :+ eff) a -> s -> Eff eff s
+execState :: Eff (Reader s ': Writer s ': effs) a -> s -> Eff effs s
 execState f s = snd <$> runState f s

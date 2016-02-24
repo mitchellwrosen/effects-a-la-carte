@@ -1,65 +1,57 @@
 module Control.Eff
   ( module Control.Eff
-  , module Control.Eff.Void
+  , module Data.Union
   ) where
 
-import Control.Eff.Void
+import Data.Union
 
 import Control.Monad
 
 
-data (f :+ g) a = InL (f a) | InR (g a)
-infixr 5 :+
+data Eff (effs :: [* -> *]) (a :: *) where
+  Pure   :: a -> Eff effs a
+  Impure :: Union effs x -> (x -> Eff effs a) -> Eff effs a
 
-
-class f :< g where
-  inj :: f a -> g a
-
-instance f :< f where
-  inj = id
-
-instance {-# OVERLAPPING #-} f :< (f :+ g) where
-  inj = InL
-
-instance {-# OVERLAPPING #-} (f :< g) => f :< (h :+ g) where
-  inj = InR . inj
-
-
-data Eff eff a where
-  Pure   :: a -> Eff eff a
-  Impure :: eff x -> (x -> Eff eff a) -> Eff eff a
-
-instance Functor (Eff eff) where
-  fmap :: (a -> b) -> Eff eff a -> Eff eff b
+instance Functor (Eff effs) where
+  fmap :: (a -> b) -> Eff effs a -> Eff effs b
   fmap f (Pure a) = Pure (f a)
-  fmap f (Impure g k) = Impure g (fmap f . k)
+  fmap f (Impure es k) = Impure es (fmap f . k)
 
-instance Applicative (Eff eff) where
-  pure :: a -> Eff eff a
+instance Applicative (Eff effs) where
+  pure :: a -> Eff effs a
   pure = Pure
 
-  (<*>) :: Eff eff (a -> b) -> Eff eff a -> Eff eff b
+  (<*>) :: Eff effs (a -> b) -> Eff effs a -> Eff effs b
   Pure f <*> a = f <$> a
-  Impure g k <*> a = Impure g (\x -> k x <*> a)
+  Impure es k <*> a = Impure es (\x -> k x <*> a)
 
-instance Monad (Eff eff) where
-  return :: a -> Eff eff a
+instance Monad (Eff effs) where
+  return :: a -> Eff effs a
   return = Pure
 
-  (>>=) :: Eff eff a -> (a -> Eff eff b) -> Eff eff b
+  (>>=) :: Eff effs a -> (a -> Eff effs b) -> Eff effs b
   Pure a >>= f = f a
-  Impure g k >>= f = Impure g (k >=> f)
+  Impure es k >>= f = Impure es (k >=> f)
 
 
-run :: Eff Void a -> a
+run :: Eff '[] a -> a
 run (Pure a) = a
 
-eta :: eff a -> Eff eff a
-eta f = Impure f Pure
+eta :: (eff :< effs) => eff a -> Eff effs a
+eta f = Impure (inj f) Pure
 
-hoist :: (forall x. f x -> g x) -> Eff f a -> Eff g a
-hoist _ (Pure a) = Pure a
-hoist f (Impure g k) = Impure (f g) (\x -> hoist f (k x))
-
-inject :: (f :< g) => f a -> Eff g a
-inject = hoist inj . eta
+-- | Handle an effect with continuations for the pure and impure cases.
+eliminate
+  :: forall a b eff effs.
+     (a -> Eff effs b)
+  -> (forall x. eff x -> (x -> Eff effs b) -> Eff effs b)
+  -> Eff (eff ': effs) a
+  -> Eff effs b
+eliminate pur imp (Pure a) = pur a
+eliminate pur imp (Impure es k) =
+  case decomp es of
+    Left es' -> Impure es' q
+    Right e  -> imp e q
+ where
+  -- q :: x -> Eff effs b
+  q x = eliminate pur imp (k x)

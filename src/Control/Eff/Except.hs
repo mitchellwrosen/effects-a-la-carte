@@ -2,13 +2,14 @@ module Control.Eff.Except where
 
 import Control.Eff
 
+
 data Except e x where
   Raise :: e -> Except e a
 
-raise :: (Except e :< eff) => e -> Eff eff a
-raise e = inject (Raise e)
 
-runExcept :: Eff (Except e :+ eff) a -> Eff eff (Either e a)
-runExcept (Pure a) = Pure (Right a)
-runExcept (Impure (InL (Raise e)) k) = Pure (Left e)
-runExcept (Impure (InR eff) k) = Impure eff (\x -> runExcept (k x))
+raise :: (Except e :< effs) => e -> Eff effs a
+raise e = eta (Raise e)
+
+
+runExcept :: Eff (Except e ': effs) a -> Eff effs (Either e a)
+runExcept = eliminate (pure . Right) (\(Raise e) _ -> pure (Left e))

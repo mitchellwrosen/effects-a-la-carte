@@ -10,12 +10,16 @@ category: Control
 
 default-extensions:
   - BangPatterns
+  - DataKinds
   - DeriveFunctor
   - FlexibleContexts
   - FlexibleInstances
   - GADTs
   - InstanceSigs
+  - KindSignatures
+  - LambdaCase
   - MultiParamTypeClasses
+  - PolyKinds
   - RankNTypes
   - ScopedTypeVariables
   - TypeOperators
@@ -25,5 +29,5 @@ library:
   dependencies:
     - base
     - concurrent-supply
-    - free
     - transformers
+  other-modules: []
