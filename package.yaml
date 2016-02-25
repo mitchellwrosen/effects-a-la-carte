@@ -22,6 +22,7 @@ default-extensions:
   - PolyKinds
   - RankNTypes
   - ScopedTypeVariables
+  - TypeFamilies
   - TypeOperators
 
 library:

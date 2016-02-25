@@ -1,5 +1,7 @@
 module Data.Union where
 
+import GHC.Exts (Constraint)
+
 
 -- An open union data type that supports injection and projection, where the
 -- summands happen to have kind * -> *.
@@ -51,6 +53,21 @@ instance {-# OVERLAPS #-} x :< (x ': xs) where
 
 instance {-# OVERLAPS #-} (x :< xs) => x :< (y ': xs) where
   index = IS index
+
+
+-- Convenience type family for consolidating multiple membership instances.
+--
+-- For example,
+--
+--     (Reader r :< eff, Writer w :< eff, Base IO :< eff, Alt :< eff)
+--
+-- can be reduced to
+--
+--     ([Reader r, Writer w, Base IO, Alt] :<< eff)
+--
+type family (:<<) (xs :: [k]) (ys :: [k]) :: Constraint where
+  '[] :<< ys = ()
+  (x ': xs) :<< ys = (x :< ys, xs :<< ys)
 
 
 -- Inject an 'f a' into a 'Union fs a', which is possible so long as 'f :< fs'.

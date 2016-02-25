@@ -18,7 +18,7 @@ get = ask
 put :: (Writer s :< effs) => s -> Eff effs ()
 put = tell
 
-modify :: (Reader s :< effs, Writer s :< effs) => (s -> s) -> Eff effs ()
+modify :: ([Reader s, Writer s] :<< effs) => (s -> s) -> Eff effs ()
 modify f = get >>= put . f
 
 

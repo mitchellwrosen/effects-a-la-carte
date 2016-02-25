@@ -23,7 +23,7 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: BangPatterns DataKinds DeriveFunctor FlexibleContexts FlexibleInstances GADTs InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses PolyKinds RankNTypes ScopedTypeVariables TypeOperators
+  default-extensions: BangPatterns DataKinds DeriveFunctor FlexibleContexts FlexibleInstances GADTs InstanceSigs KindSignatures LambdaCase MultiParamTypeClasses PolyKinds RankNTypes ScopedTypeVariables TypeFamilies TypeOperators
   build-depends:
       base
     , concurrent-supply
