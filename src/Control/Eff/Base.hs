@@ -1,8 +1,10 @@
-{-# LANGUAGE DataKinds        #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GADTs            #-}
-{-# LANGUAGE RankNTypes       #-}
-{-# LANGUAGE TypeOperators    #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE GADTs               #-}
+{-# LANGUAGE LambdaCase          #-}
+{-# LANGUAGE RankNTypes          #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeOperators       #-}
 
 module Control.Eff.Base where
 
@@ -11,6 +13,8 @@ import Control.Eff
 import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.ST
+
+import qualified Control.Exception as E
 
 
 data Base m x where
@@ -27,6 +31,20 @@ liftIO = lift
 
 liftST :: (Base (ST s) :< eff) => ST s a -> Eff eff a
 liftST = lift
+
+-- | Catch asynchronous exceptions.
+catchAsync
+  :: forall a e effs.
+     (Base IO :< effs, E.Exception e)
+  => Eff effs a
+  -> (e -> Eff effs a)
+  -> Eff effs a
+catchAsync eff handler = interpose pure imp eff
+ where
+  imp :: Base IO x -> (x -> Eff effs a) -> Eff effs a
+  imp (Lift m) k = lift (E.try m) >>= \case
+    Left e -> handler e
+    Right x -> k x
 
 
 runBase :: Monad m => Eff '[Base m] a -> m a
