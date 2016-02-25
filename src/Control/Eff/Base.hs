@@ -1,3 +1,9 @@
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GADTs            #-}
+{-# LANGUAGE RankNTypes       #-}
+{-# LANGUAGE TypeOperators    #-}
+
 module Control.Eff.Base where
 
 import Control.Eff

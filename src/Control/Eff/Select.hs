@@ -1,3 +1,8 @@
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GADTs            #-}
+{-# LANGUAGE TypeOperators    #-}
+
 module Control.Eff.Select where
 
 import Control.Eff

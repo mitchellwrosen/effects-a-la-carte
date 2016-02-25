@@ -1,3 +1,10 @@
+{-# LANGUAGE DataKinds      #-}
+{-# LANGUAGE GADTs          #-}
+{-# LANGUAGE InstanceSigs   #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE RankNTypes     #-}
+{-# LANGUAGE TypeOperators  #-}
+
 module Control.Eff
   ( module Control.Eff
   , module Data.Union

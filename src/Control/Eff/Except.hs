@@ -1,3 +1,8 @@
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GADTs            #-}
+{-# LANGUAGE TypeOperators    #-}
+
 module Control.Eff.Except where
 
 import Control.Eff

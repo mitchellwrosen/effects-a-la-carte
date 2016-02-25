@@ -1,4 +1,9 @@
+{-# LANGUAGE DataKinds              #-}
+{-# LANGUAGE GADTs                  #-}
+{-# LANGUAGE FlexibleContexts       #-}
+{-# LANGUAGE FlexibleInstances      #-}
 {-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE TypeOperators          #-}
 
 module Control.Eff.Fresh where
 

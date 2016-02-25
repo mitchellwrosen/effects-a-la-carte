@@ -8,23 +8,6 @@ github: mitchellwrosen/effects-a-la-carte
 copyright: 2016 Mitchell Rosen
 category: Control
 
-default-extensions:
-  - BangPatterns
-  - DataKinds
-  - DeriveFunctor
-  - FlexibleContexts
-  - FlexibleInstances
-  - GADTs
-  - InstanceSigs
-  - KindSignatures
-  - LambdaCase
-  - MultiParamTypeClasses
-  - PolyKinds
-  - RankNTypes
-  - ScopedTypeVariables
-  - TypeFamilies
-  - TypeOperators
-
 library:
   source-dirs: src
   dependencies:

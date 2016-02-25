@@ -1,11 +1,9 @@
-module Control.Eff.State
-  ( get
-  , put
-  , modify
-  , runState
-  , evalState
-  , execState
-  ) where
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE GADTs            #-}
+{-# LANGUAGE TypeOperators    #-}
+
+module Control.Eff.State where
 
 import Control.Eff
 import Control.Eff.Reader
