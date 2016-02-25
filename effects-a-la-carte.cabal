@@ -30,6 +30,7 @@ library
     , transformers
   exposed-modules:
       Control.Eff
+      Control.Eff.Alt
       Control.Eff.Base
       Control.Eff.Except
       Control.Eff.Fresh
