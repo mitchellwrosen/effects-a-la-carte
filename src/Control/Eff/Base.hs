@@ -32,9 +32,9 @@ liftST = lift
 runBase :: Monad m => Eff '[Base m] a -> m a
 runBase (Pure a) = pure a
 runBase (Impure es k) =
-  case decomp es of
-    Right (Lift m) -> m >>= \x -> runBase (k x)
-    -- Left impossible
+  case prj es of
+    Just (Lift m) -> m >>= \x -> runBase (k x)
+    -- Nothing impossible
 
 runIO :: MonadIO m => Eff '[Base m] a -> m a
 runIO = runBase

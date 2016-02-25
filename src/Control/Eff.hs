@@ -62,3 +62,19 @@ eliminate pur imp (Impure es k) =
  where
   -- q :: x -> Eff effs b
   q x = eliminate pur imp (k x)
+
+interpose
+  :: (eff :< effs)
+  => (a -> Eff effs b)
+  -> (forall x. eff x -> (x -> Eff effs b) -> Eff effs b)
+  -> Eff effs a
+  -> Eff effs b
+interpose pur imp (Pure a) = pur a
+interpose pur imp (Impure es k) =
+  case prj es of
+    Nothing -> Impure es q
+    Just eff -> imp eff q
+ where
+  -- q x :: x -> Eff effs b
+  q x = interpose pur imp (k x)
+
