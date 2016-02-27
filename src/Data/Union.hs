@@ -10,6 +10,7 @@
 
 module Data.Union where
 
+import Data.Type.Equality
 import GHC.Exts (Constraint)
 
 
@@ -52,17 +53,6 @@ data Union (fs :: [* -> *]) (x :: *) where
 data Index (x :: k) (xs :: [k]) where
   IZ :: Index x (x ': xs)
   IS :: Index x xs -> Index x (y ': xs)
-
--- | A proof that either two types are equal or not.
-data a :==?: b where
-  (:==:) :: a :==?: a
-  (:/=:) :: a :==?: b
-
--- | Get a proof of whether or not two indices into the same list are equal.
-indexEq :: Index x zs -> Index y zs -> x :==?: y
-indexEq IZ IZ = (:==:)
-indexEq (IS i) (IS j) = indexEq i j
-indexEq _ _ = (:/=:)
 
 
 -- | List membership multiparameter typeclass. There are only two (overlapping)
@@ -166,8 +156,14 @@ inj f = Union f index
 prj :: forall a f fs. (f :< fs) => Union fs a -> Maybe (f a)
 prj (Union f i) =
   case indexEq i (index :: Index f fs) of
-    (:==:) -> Just f
-    (:/=:) -> Nothing
+    Just Refl -> Just f
+    _ -> Nothing
+ where
+  indexEq :: Index x zs -> Index y zs -> Maybe (x :~: y)
+  indexEq IZ IZ = Just Refl
+  indexEq (IS i) (IS j) = indexEq i j
+  indexEq _ _ = Nothing
+
 
 decomp :: Union (f ': fs) x -> Either (Union fs x) (f x)
 decomp (Union f IZ) = Right f
